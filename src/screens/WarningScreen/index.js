@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import C from './style';
 
@@ -15,22 +15,24 @@ export default () => {
     const [loading, setLoading] = useState(true);
     const [list, setList] = useState([]);
 
+    const [searchText, setSearchText] = useState('');
+
     useEffect(()=>{
         navigation.setOptions({
-            headerTitle: 'Livro de Ocorrências',
+            headerTitle: 'Médicos',
             headerRight: () => (
                 <C.AddButton onPress={()=>navigation.navigate('WarningAddScreen')}>
                     <Icon name="plus" size={24} color="#000" />
                 </C.AddButton>
             )
         });
-        getWarnings();
+        getMedicos();
     }, []);
 
-    const getWarnings = async () => {
+    const getMedicos = async () => {
         setList([]);
         setLoading(true);
-        const result = await api.getWarnings();
+        const result = await api.getMedicos();
         setLoading(false);
         if(result.error === '') {
             setList(result.list);
@@ -39,16 +41,52 @@ export default () => {
         }
     }
 
+    const searchMedic = async () => {
+        setLoading(true);
+        setList([]);
+
+        if(searchText != ''){
+            const res = await api.search(searchText);
+            if(res.error == ''){
+                setList(res.list);
+            }else{
+                alert("Erro: "+res.error);
+            }
+        }
+
+        setLoading(false);
+    }
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getMedicos();
+            setSearchText('');
+            
+        }, [])
+    );
+
     return (
         <C.Container>
+            <C.SearchArea>
+                <C.SearchInput 
+                    placeholder="Digite o nome do Médico"
+                    placeholderTextColor="#FFFFFF"
+                    value={searchText}
+                    onChangeText={t=>setSearchText(t)}
+                    onEndEditing={searchMedic}
+                    returnkeyType="search"
+                    selectTextOnFocus
+                />
+
+            </C.SearchArea>
             {!loading && list.length === 0 &&
                 <C.NoListArea>
-                    <C.NoListText>Não há ocorrências.</C.NoListText>
+                    <C.NoListText>Não foi encontrado nenhum médico.</C.NoListText>
                 </C.NoListArea>
             }
             <C.List
                 data={list}
-                onRefresh={getWarnings}
+                onRefresh={getMedicos}
                 refreshing={loading}
                 renderItem={({item})=><WarningItem data={item} />}
                 keyExtractor={(item)=>item.id.toString()}

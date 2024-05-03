@@ -4,7 +4,7 @@ import C from './style';
 
 import { useStateValue } from '../../contexts/StateContext';
 import api from '../../services/api';
-import Icon from 'react-native-vector-icons/FontAwesome';
+
 import ReservationItem from '../../components/ReservationItem';
 
 export default () => {
@@ -16,7 +16,7 @@ export default () => {
 
     useEffect(()=>{
         navigation.setOptions({
-            headerTitle: 'Contratos'
+            headerTitle: 'Agendamentos Disponíveis'
         });
         getReservations();
     }, []);
@@ -36,153 +36,28 @@ export default () => {
     return (
         <C.Container>
             <C.Scroller contentContainerStyle={{paddingBottom: 40}}>
-                <C.ContainerMenu>
-                    <C.ContainerMenuItems>
-                        <Icon
-                            name='file'
-                            size={25}   
-                            color='#fff'
-                        />
-                        <C.ContainerMenuItemsTitle>
-                            TODOS
-                        </C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                    <C.ContainerMenuItems>
-                        <Icon
-                            name='file'
-                            size={25}   
-                            color='#fff'
-                        />
-                        <C.ContainerMenuItemsTitle>
-                            VIGENTES
-                        </C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                    <C.ContainerMenuItems>
-                        <Icon
-                            name='file'
-                            size={25}   
-                            color='#fff'
-                        />
-                        <C.ContainerMenuItemsTitle>
-                            VENCIDOS
-                        </C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                </C.ContainerMenu>  
+                <C.ButtonArea onPress={()=>navigation.navigate('ReservationMyScreen')}>
+                    <C.ButtonText>Meus Agendamentos</C.ButtonText>
+                </C.ButtonArea>
 
-                <C.ContainerMenu style={{backgroundColor: '#eef0f6', alignItems: 'center'}}>
-                    <C.ContainerMenuItems>
-                        <C.ContainerMenuItemsTitle style={{color: '#3fa5fb'}}>Contrato</C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                    <C.ContainerMenuItems>
-                        <C.ContainerMenuItemsTitle style={{color: '#3fa5fb'}}>TipoObjeto e Saldo</C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                    <C.ContainerMenuItems>
-                    <C.ContainerMenuItemsTitle style={{color: '#3fa5fb'}}>Visualizar</C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                </C.ContainerMenu>
+                <C.Title>Selecione um profissional</C.Title>
 
-                <C.ContainerMenu style={{backgroundColor: '#F5F6FA', alignItems: 'center', borderBottomColor: '#ccc', borderBottomWidth: 1}}>
-                    <C.ContainerMenuItems>
-                        <C.ContainerMenuItemsTitle style={{color: '#3fa5fb'}}>2001 / 2018</C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                    <C.ContainerMenuItems>
-                        <C.ContainerMenuItemsTitle style={{color: '#3fa5fb'}}>Fornecimento</C.ContainerMenuItemsTitle>
-                        <C.ContainerMenuItemsTitle style={{color: '#ccc'}}>R$ 92.292,50</C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                    <C.ContainerMenuItems style={{width:75}}>
-                        <Icon
-                            name='eye'
-                            size={25}   
-                            color='#2699fb'
-                        />
-                    </C.ContainerMenuItems>
-                </C.ContainerMenu>
+                {loading &&
+                    <C.LoadingIcon size="large" color="#87CEFA" />
+                }
 
-                <C.ContainerMenu style={{backgroundColor: '#F5F6FA', alignItems: 'center', borderBottomColor: '#ccc', borderBottomWidth: 1}}>
-                    <C.ContainerMenuItems>
-                        <C.ContainerMenuItemsTitle style={{color: '#3fa5fb'}}>2002 / 2018</C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                    <C.ContainerMenuItems>
-                        <C.ContainerMenuItemsTitle style={{color: '#3fa5fb'}}>Obras</C.ContainerMenuItemsTitle>
-                        <C.ContainerMenuItemsTitle style={{color: '#ccc'}}>R$ 2.000.000,00</C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                    <C.ContainerMenuItems style={{width:75}}>
-                        <Icon
-                            name='eye'
-                            size={25}   
-                            color='#2699fb'
-                        />
-                    </C.ContainerMenuItems>
-                </C.ContainerMenu>
+                {!loading && list.length === 0 &&
+                    <C.NoListArea>
+                        <C.NoListText>Não há áreas disponíveis.</C.NoListText>
+                    </C.NoListArea>
+                }
 
-                <C.ContainerMenu style={{backgroundColor: '#F5F6FA', alignItems: 'center', borderBottomColor: '#ccc', borderBottomWidth: 1}}>
-                    <C.ContainerMenuItems>
-                        <C.ContainerMenuItemsTitle style={{color: '#3fa5fb'}}>2004 / 2018</C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                    <C.ContainerMenuItems>
-                        <C.ContainerMenuItemsTitle style={{color: '#3fa5fb'}}>Serviço</C.ContainerMenuItemsTitle>
-                        <C.ContainerMenuItemsTitle style={{color: '#ccc'}}>R$ 632.610,00</C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                    <C.ContainerMenuItems style={{width:75}}>
-                        <Icon
-                            name='eye'
-                            size={25}   
-                            color='#2699fb'
-                        />
-                    </C.ContainerMenuItems>
-                </C.ContainerMenu>
-
-                <C.ContainerMenu style={{backgroundColor: '#F5F6FA', alignItems: 'center', borderBottomColor: '#ccc', borderBottomWidth: 1}}>
-                    <C.ContainerMenuItems>
-                        <C.ContainerMenuItemsTitle style={{color: '#3fa5fb'}}>2001 / 2018</C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                    <C.ContainerMenuItems>
-                        <C.ContainerMenuItemsTitle style={{color: '#3fa5fb'}}>Serviço Continuado</C.ContainerMenuItemsTitle>
-                        <C.ContainerMenuItemsTitle style={{color: '#ccc'}}>R$ 300.000,00</C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                    <C.ContainerMenuItems style={{width:75}}>
-                        <Icon
-                            name='eye'
-                            size={25}   
-                            color='#2699fb'
-                        />
-                    </C.ContainerMenuItems>
-                </C.ContainerMenu>
-
-                <C.ContainerMenu style={{backgroundColor: '#F5F6FA', alignItems: 'center', borderBottomColor: '#ccc', borderBottomWidth: 1}}>
-                    <C.ContainerMenuItems>
-                        <C.ContainerMenuItemsTitle style={{color: '#3fa5fb'}}>2007 / 2018</C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                    <C.ContainerMenuItems>
-                        <C.ContainerMenuItemsTitle style={{color: '#3fa5fb'}}>Fornecimento</C.ContainerMenuItemsTitle>
-                        <C.ContainerMenuItemsTitle style={{color: '#ccc'}}>R$ 12.400,00</C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                    <C.ContainerMenuItems style={{width:75}}>
-                        <Icon
-                            name='eye'
-                            size={25}   
-                            color='#2699fb'
-                        />
-                    </C.ContainerMenuItems>
-                </C.ContainerMenu>
-
-                <C.ContainerMenu style={{backgroundColor: '#F5F6FA', alignItems: 'center', borderBottomColor: '#ccc', borderBottomWidth: 1}}>
-                    <C.ContainerMenuItems>
-                        <C.ContainerMenuItemsTitle style={{color: '#3fa5fb'}}>2008 / 2018</C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                    <C.ContainerMenuItems>
-                        <C.ContainerMenuItemsTitle style={{color: '#3fa5fb'}}>Serviço</C.ContainerMenuItemsTitle>
-                        <C.ContainerMenuItemsTitle style={{color: '#ccc'}}>R$ 780.000,00</C.ContainerMenuItemsTitle>
-                    </C.ContainerMenuItems>
-                    <C.ContainerMenuItems style={{width:75}}>
-                        <Icon
-                            name='eye'
-                            size={25}   
-                            color='#2699fb'
-                        />
-                    </C.ContainerMenuItems>
-                </C.ContainerMenu>
-                
+                {list.map((item, index)=>(
+                    <ReservationItem
+                        key={index}
+                        data={item}
+                    />
+                ))}
             </C.Scroller>
         </C.Container>
     );

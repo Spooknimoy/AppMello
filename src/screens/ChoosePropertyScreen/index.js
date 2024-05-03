@@ -56,8 +56,8 @@ export default () => {
                 }
                 {!loading && context.user.user.properties.length > 0 &&
                     <>
-                        <C.HeadTitle>Olá {context.user.user.name}</C.HeadTitle>
-                        <C.HeadTitle>Escolha uma das suas propriedades</C.HeadTitle>
+                        <C.HeadTitle>Olá Thiago Assunção</C.HeadTitle>
+                        <C.HeadTitle>Escolha uma das suas empresas</C.HeadTitle>
 
                         <C.PropertyList>
                             {context.user.user.properties.map((item, index)=>(

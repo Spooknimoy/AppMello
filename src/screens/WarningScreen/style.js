@@ -21,5 +21,18 @@ export default {
     `,
     AddButton: styled.TouchableOpacity`
         margin-right: 15px;
-    `
+    `,
+    SearchArea: styled.View`
+        background-color: #ccc;
+        height: 40px;
+        border-radius: 20px;
+        padding: 0 20px;
+        margin: 0 20px 20px 20px;
+    `,
+    SearchInput: styled.TextInput`
+        flex:1;
+        font-size: 16px;
+        color: #FFFFFF;
+    `,
+
 };

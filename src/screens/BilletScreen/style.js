@@ -4,11 +4,7 @@ export default {
     Container: styled.SafeAreaView`
         flex: 1;
         background-color: #F5F6FA;
-        
-    `,
-    Scroller: styled.ScrollView`
-        flex: 1;
-        
+        padding: 20px;
     `,
     LoadingIcon: styled.ActivityIndicator``,
     NoListArea: styled.View`
@@ -22,37 +18,5 @@ export default {
     `,
     List: styled.FlatList`
         flex: 1;
-    `,
-    ContainerMenu: styled.View`
-        flex:1;
-        flex-direction:row;
-        padding:10px 30px;
-        background-color: #3fa5fb;
-        
-        justify-content: space-between;
-    `,
-    ContainerMenuItems: styled.View`
-        justify-content: center;
-        align-items: center;
-    `,
-    ContainerMenuItemsTitle: styled.Text`
-        margin-top: 10px;
-        font-weight: bold;
-        color: #fff;
-        font-size:15px;
-
-    `,
-    ButtonArea: styled.TouchableOpacity`
-        background-color: #2699fb;
-        padding: 12px;
-        justify-content: center;
-        align-items: center;
-        border-radius: 5px;
-        margin-bottom: 15px;
-    `,
-    ButtonText: styled.Text`
-        color: #FFF;
-        font-size: 15px;
-        font-weight: bold;
     `
 };

@@ -30,7 +30,7 @@ export default () => {
 
                 navigation.reset({
                     index: 1,
-                    routes:[{name: 'ChoosePropertyScreen'}]
+                    routes:[{name: 'MainDrawer'}]
                 });
             } else {
                 alert(result.error);

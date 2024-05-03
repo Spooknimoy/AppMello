@@ -10,6 +10,7 @@ export default {
     `,
     CoverImage: styled.Image`
         height: 150px;
+        width: 125px;
     `,
     LoadingIcon: styled.ActivityIndicator`
         margin-top: 20px;
@@ -34,7 +35,7 @@ export default {
         border-color: #CCC;
         border-radius: 5px;
         margin: 5px 20px;
-        background-color: ${props=>props.active ? '#8863E6':'transparent'};
+        background-color: ${props=>props.active ? '#87CEFA':'transparent'};
         padding: 10px;
     `,
     TimeItemText: styled.Text`
@@ -42,7 +43,7 @@ export default {
         font-size: 14px;
     `,
     ButtonArea: styled.TouchableOpacity`
-        background-color: #8863E6;
+        background-color: #87CEFA;
         padding: 15px;
         justify-content: center;
         align-items: center;

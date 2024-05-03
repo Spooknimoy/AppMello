@@ -15,13 +15,13 @@ export default () => {
     const [loading, setLoading] = useState(true);
     const [disabledDates, setDisabledDates] = useState([]);
     const [selectedDate, setSelectedDate] = useState(null);
-    const [timeList, setTimeList] = useState([]);
-    const [selectedTime, setSelectedTime] = useState(null);
+    const [medicoList, setMedicoList] = useState([]);
+    const [selectedMedico, setSelectedMedico] = useState(null);
 
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
             navigation.setOptions({
-                headerTitle: `Reservar ${route.params.data.title}`
+                headerTitle: `Agendamentos`
             });
             getDisabledDates();
         });
@@ -29,22 +29,19 @@ export default () => {
     }, [navigation, route]);
 
     useEffect(()=>{
-        getTimes();
+        getMedicos();
     }, [selectedDate]);
 
     const minDate = new Date();
     const maxDate = new Date();
     maxDate.setMonth(maxDate.getMonth() + 3);
 
-    const getTimes = async () => {
+    const getMedicos = async () => {
         if(selectedDate) {
-            const result = await api.getReservationTimes(
-                route.params.data.id,
-                selectedDate
-            );
+            const result = await api.getMedicosAgendamentos(selectedDate);
             if(result.error === '') {
-                setSelectedTime(null);
-                setTimeList(result.list);
+                setSelectedMedico(null);
+                setMedicoList(result.list);
                 setTimeout(()=>{
                     scroll.current.scrollToEnd();
                 }, 500);
@@ -56,17 +53,22 @@ export default () => {
 
     const getDisabledDates = async () => {
         setDisabledDates([]);
-        setTimeList([]);
+        setMedicoList([]);
         setSelectedDate(null);
-        setSelectedTime(null);
+        setSelectedMedico(null);
         setLoading(true);
-        const result = await api.getDisabledDates(route.params.data.id);
+        const result = await api.getDisabledDates(1);
         setLoading(false);
         if(result.error === '') {
             let dateList = [];
             for(let i in result.list) {
-                dateList.push( new Date(result.list[i]) );
+                var tomorrow =  new Date(result.list[i]);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                dateList.push( tomorrow );
+                
             }
+            
+            
             setDisabledDates(dateList);
         } else {
             alert(result.error);
@@ -75,9 +77,9 @@ export default () => {
 
     const handleDateChange = (date) => {
         let dateEl = new Date(date);
-        let year = dateEl.getFullYear();
-        let month = dateEl.getMonth() + 1;
-        let day = dateEl.getDate();
+        let year = dateEl.getUTCFullYear();
+        let month = dateEl.getUTCMonth() + 1;
+        let day = dateEl.getUTCDate();
 
         month = month < 10 ? '0'+month : month;
         day = day < 10 ? '0'+day : day;
@@ -86,26 +88,27 @@ export default () => {
 
     const showTextDate = (date) => {
         let dateEl = new Date(date);
-        let year = dateEl.getFullYear();
-        let month = dateEl.getMonth() + 1;
-        let day = dateEl.getDate();
+        let year = dateEl.getUTCFullYear();
+        let month = dateEl.getUTCMonth() + 1;
+        let day = dateEl.getUTCDate();
 
         month = month < 10 ? '0'+month : month;
         day = day < 10 ? '0'+day : day;
         return `${day}/${month}/${year}`;
     }
 
-    const handleSave = async () => {
-        if(selectedDate && selectedTime) {
-            const result = await api.setReservation(
-                route.params.data.id,
-                selectedDate,
-                selectedTime
-            );
-            if(result.error === '') {
-                navigation.navigate('ReservationMyScreen');
+    const showTimeDate = (time) => {
+        let newTime = time.substr(0, 5);
+        return newTime;
+    }
+
+    const handleView = async () => {
+        if(selectedDate && selectedMedico) {
+            const data = await api.getMedicoId(selectedMedico);
+            if(data.error === '') {
+                navigation.navigate('ReservationMedico', {data});
             } else {
-                alert(result.error);
+                alert(data.error);
             }
         } else {
             alert("Selecione DATA e HORÁRIO.");
@@ -115,8 +118,7 @@ export default () => {
     return (
         <C.Container>
             <C.Scroller ref={scroll} contentContainerStyle={{paddingBottom: 40}}>
-                <C.CoverImage source={{uri: route.params.data.cover}} resizeMode="cover" />
-
+                
                 {loading &&
                     <C.LoadingIcon size="large" color="#8863E6" />
                 }
@@ -132,7 +134,7 @@ export default () => {
                             months={['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']}
                             previousTitle="Anterior"
                             nextTitle="Próximo"
-                            selectedDayColor="#8863E6"
+                            selectedDayColor="#87CEFA"
                             selectedDayTextColor="#FFFFFF"
                             todayBackgroundColor="transparent"
                             todayTextStyle="#000000"
@@ -142,18 +144,18 @@ export default () => {
 
                 {!loading && selectedDate &&
                     <>
-                        <C.Title>Horários disponíveis em {showTextDate(selectedDate)}:</C.Title>
+                        <C.Title>Marcados em {showTextDate(selectedDate)}:</C.Title>
 
                         <C.TimeListArea>
-                            {timeList.map((item, index)=>(
+                            {medicoList.map((item, index)=>(
                                 <C.TimeItem
                                     key={index}
-                                    onPress={()=>setSelectedTime(item.id)}
-                                    active={selectedTime === item.id}
+                                    onPress={()=>setSelectedMedico(item.id)}
+                                    active={selectedMedico === item.id}
                                 >
                                     <C.TimeItemText
-                                        active={selectedTime === item.id}
-                                    >{item.title}</C.TimeItemText>
+                                        active={selectedMedico === item.id}
+                                    >{item.NOME}</C.TimeItemText>
                                 </C.TimeItem>
                             ))}
                         </C.TimeListArea>
@@ -161,8 +163,8 @@ export default () => {
                 }
             </C.Scroller>
             {!loading &&
-                <C.ButtonArea onPress={handleSave}>
-                    <C.ButtonText>Reservar Local</C.ButtonText>
+                <C.ButtonArea onPress={handleView}>
+                    <C.ButtonText>Visualizar</C.ButtonText>
                 </C.ButtonArea>
             }
         </C.Container>

@@ -17,7 +17,7 @@ export default {
         margin-bottom: 15px;
     `,
     ButtonArea: styled.TouchableOpacity`
-        background-color: #5e2129;
+        background-color: #87CEFA;
         padding: 12px;
         justify-content: center;
         align-items: center;

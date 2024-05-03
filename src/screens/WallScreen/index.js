@@ -2,11 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import C from './style';
 
-import { Text } from 'react-native';
-
 import { useStateValue } from '../../contexts/StateContext';
 import api from '../../services/api';
-import Icon from 'react-native-vector-icons/FontAwesome';
+
 import WallItem from '../../components/WallItem';
 
 export default () => {
@@ -18,7 +16,7 @@ export default () => {
 
     useEffect(()=>{
         navigation.setOptions({
-            headerTitle: 'Inicio'
+            headerTitle: 'Avisos de hoje'
         });
         getWall();
     }, []);
@@ -26,7 +24,15 @@ export default () => {
     const getWall = async () => {
         setWallList([]);
         setLoading(true);
-        const result = await api.getWall();
+        let dateEl = new Date();
+        let year = dateEl.getUTCFullYear();
+        let month = dateEl.getUTCMonth() + 1;
+        let day = dateEl.getUTCDate();
+
+        month = month < 10 ? '0'+month : month;
+        day = day < 10 ? '0'+day : day;
+        var dataHoje = `${year}-${month}-${day}`;
+        const result = await api.getEventoDia(dataHoje);
         setLoading(false);
         if(result.error === '') {
             setWallList(result.list);
@@ -37,11 +43,18 @@ export default () => {
 
     return (
         <C.Container>
-            <C.Logo
-                source={require('../../assets/adv2.png')}
-                resizeMode="contain"
+            {!loading && wallList.length === 0 &&
+                <C.NoListArea>
+                    <C.NoListText>Não há Avisos para hoje.</C.NoListText>
+                </C.NoListArea>
+            }
+            <C.List
+                data={wallList}
+                onRefresh={getWall}
+                refreshing={loading}
+                renderItem={({item})=><WallItem data={item} />}
+                keyExtractor={(item)=>item.id.toString()}
             />
-            <C.Slogan>Aplicativo - WEBCONJU</C.Slogan>
         </C.Container>
     );
 }

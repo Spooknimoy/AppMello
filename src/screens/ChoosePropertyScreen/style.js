@@ -21,7 +21,7 @@ export default {
         align-items: center;
     `,
     ExitButtonArea: styled.TouchableOpacity`
-        background-color: #8863E6;
+        background-color: #87CEFA;
         padding: 15px;
         justify-content: center;
         align-items: center;

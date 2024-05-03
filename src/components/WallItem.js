@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import { Modal, Linking } from 'react-native';
+
 import api from '../services/api';
 
 const Box = styled.View`
@@ -53,7 +55,10 @@ const LikeText = styled.Text`
     font-size: 13px;
     color: #9C9DB9;
 `;
-
+const DownloadButton = styled.TouchableOpacity`
+    width: 100%;
+    align-items: flex-start;
+`;
 export default ({data}) => {
 
     const [likeCount, setLikeCount] = useState(data.likes);
@@ -69,29 +74,30 @@ export default ({data}) => {
             alert(result.error);
         }
     }
-
+    const openUrl = async() => {
+        var url = `https://mellos.paulopeixoto.com/documentos/${data.ARQUIVO}`;
+        await Linking.openURL(url)
+        
+      }
     return (
         <Box>
             <HeaderArea>
-                <Icon name="newspaper-o" size={30} color="#8B63E7" />
+                <Icon name="newspaper-o" size={30} color="#87CEFA" />
                 <InfoArea>
-                    <Title>{data.title}</Title>
-                    <Date>{data.datecreated}</Date>
+                    <Title>Tipo: {data.TIPO_AVISO}</Title>
+                    <Date>Data: {data.DIA} Hora: {data.HORA}</Date>
                 </InfoArea>
             </HeaderArea>
             <Body>
-                {data.body}
+                {data.COMENTARIO}
             </Body>
-            <FooterArea>
-                <LikeButton onPress={handleLike}>
-                    {liked ? 
-                        <Icon name="heart" size={17} color="#FF0000" />
-                    : 
-                        <Icon name="heart-o" size={17} color="#FF0000" />
-                    }
-                </LikeButton>
-                <LikeText>{likeCount} pessoa{likeCount==1?'':'s'} curti{likeCount==1?'u':'ram'}</LikeText>
-            </FooterArea>
+            {data.ARQUIVO !== null && 
+            <DownloadButton onPress={openUrl}>
+            <Icon name="download" size={30} color="#28A745" />
+            </DownloadButton>
+            }
+            
+            
         </Box>
     );
 }

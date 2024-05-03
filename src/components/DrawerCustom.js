@@ -12,14 +12,13 @@ const DrawerArea = styled.View`
     background-color: #FFF;
 `;
 const DrawerLogoArea = styled.View`
-    
+    padding: 10px 20px;
     border-bottom-width: 1px;
     border-bottom-color: #EEE;
-    
 `;
 const DrawerLogo = styled.Image`
-    width: 90px;
-    height: 65px;
+    width: 190px;
+    height: 40px;
 `;
 const DrawerScroller = styled.ScrollView`
     flex: 1;
@@ -29,7 +28,7 @@ const ChangeUnitArea = styled.View`
     margin: 10px;
 `;
 const ChangeUnitButton = styled.TouchableOpacity`
-    background-color: #5e2129;
+    background-color: #87CEFA;
     padding: 12px;
     justify-content: center;
     align-items: center;
@@ -53,7 +52,7 @@ const FooterProfile = styled.Text`
 `;
 const FooterUnitText = styled.Text`
     font-size: 15px;
-    color: #2699fb;
+    color: #666E78;
 `;
 const FooterUnitButton = styled.TouchableOpacity``;
 
@@ -67,14 +66,14 @@ const MenuSquare = styled.View`
     width: 5px;
     height: 35px;
     margin-right: 20px;
-    background-color: ${props=>props.active ? '#5e2129' : 'transparent'};
+    background-color: ${props=>props.active ? '#87CEFA' : 'transparent'};
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 `;
 const MenuButtonText = styled.Text`
     font-size: 15px;
     margin-left: 10px;
-    color: ${props=>props.active ? '#5e2129' : '#666E78'};
+    color: ${props=>props.active ? '#87CEFA' : '#666E78'};
 `;
 
 export default (props) => {
@@ -86,15 +85,12 @@ export default (props) => {
 
 
     const menus = [
-        {title: 'Principal', icon: 'inbox', screen: 'WallScreen'},
-        {title: 'Diligências', icon: 'inbox', screen: 'DocumentScreen'},
-        {title: 'Financeiro', icon: 'inbox', screen: 'ReservationScreen'},
-        {title: 'Configurações', icon: 'inbox', screen: 'ReservationScreen'},
-        {title: 'Sugestões', icon: 'inbox', screen: 'ReservationScreen'}
-
+        {title: 'Todos os Avisos', icon: 'inbox', screen: 'AvisoScreen'},
+        {title: 'Agendamentos', icon: 'calendar', screen: 'ReservationAddScreen'},
+        {title: 'Médicos', icon: 'bug', screen: 'WarningScreen'},
     ];
 
-   
+
 
     const handleLogoutButton = async () => {
         await api.logout();
@@ -107,7 +103,7 @@ export default (props) => {
     return (
         <DrawerArea>
             <DrawerLogoArea>
-                {/* <DrawerLogo source={require('../assets/brasao.png')} resizeMode="contain" /> */}
+                
             </DrawerLogoArea>
             <DrawerScroller>
                 {menus.map((item, index)=>(
@@ -118,7 +114,7 @@ export default (props) => {
                         <Icon
                             name={item.icon}
                             size={20}
-                            color={props.state.routes[props.state.index].name === item.screen ? '#5e2129' : '#666E78'}
+                            color={props.state.routes[props.state.index].name === item.screen ? '#87CEFA' : '#666E78'}
                         />
                         <MenuButtonText
                             active={props.state.routes[props.state.index].name === item.screen}
@@ -134,11 +130,10 @@ export default (props) => {
             </ChangeUnitArea>
             <FooterArea>
                 <FooterInfo>
-                {/* <FooterProfile>Olá {context.user.user.name}</FooterProfile> */}
-                <FooterProfile>Olá VELOSTERTECNOLOGIA </FooterProfile>
-                <FooterProfile>Tel : (61) 98484-7154 </FooterProfile>
+                    <FooterProfile>Olá {context.user.user.nome}</FooterProfile>
+                    
                 </FooterInfo>
-               
+                
             </FooterArea>
         </DrawerArea>
     );

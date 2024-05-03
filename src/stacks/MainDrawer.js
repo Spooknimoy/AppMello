@@ -6,6 +6,11 @@ import DocumentScreen from '../screens/DocumentScreen';
 import BilletScreen from '../screens/BilletScreen';
 import WarningScreen from '../screens/WarningScreen';
 import WarningAddScreen from '../screens/WarningAddScreen';
+import WarningEditScreen from '../screens/WarningEditScreen';
+import AvisoScreen from '../screens/AvisoScreen';
+import AvisoAddScreen from '../screens/AvisoAddScreen';
+import AvisoEditScreen from '../screens/AvisoEditScreen';
+import ReservationMedico from '../screens/ReservationMedico';
 import ReservationScreen from '../screens/ReservationScreen';
 import ReservationAddScreen from '../screens/ReservationAddScreen';
 import ReservationMyScreen from '../screens/ReservationMyScreen';
@@ -24,20 +29,16 @@ export default () => {
             screenOptions={{
                 headerShown: true,
                 headerTitle: '',
-                headerTintColor: '#fff',
                 headerStyle: {
-                    backgroundColor: '#5e2129',
+                    backgroundColor: '#F5F6FA',
                     shadowOpacity: 0,
                     elevation: 0
-                },
-                headerTitleStyle: {
-                    color: 'white'
                 }
             }}
         >
             <Drawer.Screen
-                name="WallScreen"
-                component={WallScreen}
+                name="AvisoScreen"
+                component={AvisoScreen}
             />
             <Drawer.Screen
                 name="DocumentScreen"
@@ -56,8 +57,24 @@ export default () => {
                 component={WarningAddScreen}
             />
             <Drawer.Screen
+                name="WarningEditScreen"
+                component={WarningEditScreen}
+            />
+            <Drawer.Screen
+                name="AvisoAddScreen"
+                component={AvisoAddScreen}
+            />
+            <Drawer.Screen
+                name="AvisoEditScreen"
+                component={AvisoEditScreen}
+            />
+            <Drawer.Screen
                 name="ReservationScreen"
                 component={ReservationScreen}
+            />
+            <Drawer.Screen
+                name="ReservationMedico"
+                component={ReservationMedico}
             />
             <Drawer.Screen
                 name="ReservationAddScreen"

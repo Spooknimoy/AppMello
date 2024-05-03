@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const baseUrl = 'https://api.b7web.com.br/devcond/api';
+const baseUrl = 'https://mellos.paulopeixoto.com/api';
 
 const request = async (method, endpoint, params, token = null) => {
     method = method.toLowerCase();
@@ -49,15 +49,25 @@ export default {
         await AsyncStorage.removeItem('property');
         return json;
     },
-    register: async (name, email, cpf, password, password_confirm) => {
+    register: async (nome, email, cpf, password, password_confirm) => {
         let json = await request('post', '/auth/register', {
-            name, email, cpf, password, password_confirm
+            nome, email, cpf, password, password_confirm
         });
         return json;
     },
     getWall: async () => {
         let token = await AsyncStorage.getItem('token');
-        let json = await request('get', '/walls', {}, token);
+        let json = await request('get', '/mural', {}, token);
+        return json;
+    },
+    getAvisosAll: async () => {
+        let token = await AsyncStorage.getItem('token');
+        let json = await request('get', '/eventos', {}, token);
+        return json;
+    },
+    getEventoDia: async (date) => {
+        let token = await AsyncStorage.getItem('token');
+        let json = await request('get', '/eventos/geteventodia', {date}, token);
         return json;
     },
     likeWallPost: async (id) => {
@@ -79,13 +89,9 @@ export default {
         }, token);
         return json;
     },
-    getWarnings: async () => {
+    getMedicos: async () => {
         let token = await AsyncStorage.getItem('token');
-        let property = await AsyncStorage.getItem('property');
-        property = JSON.parse(property);
-        let json = await request('get', '/warnings', {
-            property: property.id
-        }, token);
+        let json = await request('get', '/medicos', {}, token);
         return json;
     },
     addWarningFile: async (file) => {
@@ -107,14 +113,137 @@ export default {
         let json = await req.json();
         return json;
     },
-    addWarning: async (title, list) => {
+    addMedico: async (NOME, TELEFONE, ENDERECO, BAIRRO, PRODUTO, HANDS_RECEB, CRM, ESPECIALIDADE, DIA, ID_PERIODO) => {
+        var HANDS = false;
+        if(HANDS_RECEB){
+            HANDS = 1;
+        }else{
+            HANDS = 0;
+        }
         let token = await AsyncStorage.getItem('token');
-        let property = await AsyncStorage.getItem('property');
-        property = JSON.parse(property);
-        let json = await request('post', '/warning', {
-            title,
-            list,
-            property: property.id
+        let json = await request('post', '/medico', {
+            NOME,
+            TELEFONE,
+            ENDERECO,
+            BAIRRO,
+            PRODUTO,
+            HANDS,
+            CRM,
+            ESPECIALIDADE,
+            DIA,
+            ID_PERIODO
+        }, token);
+        return json;
+    },
+    editMedico: async (NOME, TELEFONE, ENDERECO, BAIRRO, PRODUTO, HANDS_RECEB, CRM, ESPECIALIDADE, DIA, ID_PERIODO, id) => {
+        var HANDS = false;
+        if(HANDS_RECEB){
+            HANDS = 1;
+        }else{
+            HANDS = 0;
+        }
+        let token = await AsyncStorage.getItem('token');
+        let json = await request('post', `/medico/edit/${id}`, {
+            NOME,
+            TELEFONE,
+            ENDERECO,
+            BAIRRO,
+            PRODUTO,
+            HANDS,
+            CRM,
+            ESPECIALIDADE,
+            DIA,
+            ID_PERIODO
+        }, token);
+        return json;
+    },
+    updateStars: async (id, stars, p) => {
+        let token = await AsyncStorage.getItem('token');
+        let json = await request('post', `/medico/stars/${id}`, {
+           stars,
+           p
+        }, token);
+        return json;
+    },
+    updateHands: async (id, HANDS) => {
+        let token = await AsyncStorage.getItem('token');
+        let json = await request('post', `/medico/hands/${id}`, {
+            HANDS
+        }, token);
+        return json;
+    },
+    removeAvisoId: async (id) => {
+        let token = await AsyncStorage.getItem('token');
+        let json = await request('get', `/eventos/remove/${id}`, {}, token);
+        return json;
+    },
+    removeMedicoId: async (id) => {
+        let token = await AsyncStorage.getItem('token');
+        let json = await request('get', `/medico/remove/${id}`, {}, token);
+        return json;
+    },
+    handleRemoveAll: async () => {
+        let token = await AsyncStorage.getItem('token');
+        let json = await request('get', `/eventos/removeall`, {}, token);
+        return json;
+    },
+    addAviso: async (COMENTARIO, DIA, HORA, TIPO_AVISO, ARQUIVO) => {
+        let token = await AsyncStorage.getItem('token');
+        let formData = new FormData();
+        formData.append('COMENTARIO', COMENTARIO);
+        formData.append('DIA', DIA);
+        formData.append('HORA', HORA);
+        formData.append('TIPO_AVISO', TIPO_AVISO);
+        if(ARQUIVO.uri){
+            formData.append('ARQUIVO', {
+                uri: ARQUIVO.uri,
+                type: ARQUIVO.type,
+                name: ARQUIVO.name
+            });
+        }
+        
+        let req = await fetch(`${baseUrl}/evento`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+        let json = await req.json();
+        return json;
+    },
+    editAviso: async (COMENTARIO, DIA, HORA = '00:00:00', TIPO_AVISO, ARQUIVO, id) => {
+        let token = await AsyncStorage.getItem('token');
+        let formData = new FormData();
+        formData.append('COMENTARIO', COMENTARIO);
+        formData.append('DIA', DIA);
+        formData.append('HORA', HORA);
+        formData.append('TIPO_AVISO', TIPO_AVISO);
+        if(ARQUIVO.uri !== undefined){
+            formData.append('ARQUIVO', {
+                uri: ARQUIVO.uri,
+                type: ARQUIVO.type,
+                name: ARQUIVO.name
+            });
+        }
+        
+        let req = await fetch(`${baseUrl}/evento/edit/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+        let json = await req.json();
+        return json;
+    },
+    setComentario: async (ID_MEDICO, BODY) => {
+        let token = await AsyncStorage.getItem('token');
+        let json = await request('post', '/medico/comentario', {
+            ID_MEDICO,
+            BODY
         }, token);
         return json;
     },
@@ -125,23 +254,17 @@ export default {
     },
     getDisabledDates: async (id) => {
         let token = await AsyncStorage.getItem('token');
-        let json = await request('get', `/reservation/${id}/disableddates`, {}, token);
+        let json = await request('get', `/getdisableddates`, {}, token);
         return json;
     },
-    getReservationTimes: async (id, date) => {
+    getMedicosAgendamentos: async (date) => {
         let token = await AsyncStorage.getItem('token');
-        let json = await request('get', `/reservation/${id}/times`, {date}, token);
+        let json = await request('get', `/getmedicosagendamentos`, {date}, token);
         return json;
     },
-    setReservation: async (id, date, time) => {
+    getMedicoId: async (id) => {
         let token = await AsyncStorage.getItem('token');
-        let property = await AsyncStorage.getItem('property');
-        property = JSON.parse(property);
-        let json = await request('post', `/reservation/${id}`, {
-            property: property.id,
-            date,
-            time
-        }, token);
+        let json = await request('get', `/medico/${id}`, {}, token);
         return json;
     },
     getMyReservations: async () => {
@@ -198,6 +321,16 @@ export default {
         let json = await request('get', `/unit/${property.id}`, {}, token);
         return json;
     },
+    getComentarioId: async (id) => {
+        let token = await AsyncStorage.getItem('token');
+        let json = await request('get', `/medico/comentario/get/${id}`, {}, token);
+        return json;
+    },
+    postComentarioId: async (id, body) => {
+        let token = await AsyncStorage.getItem('token');
+        let json = await request('post', `/medico/comentario/update/${id}`, {body}, token);
+        return json;
+    },
     removeUnitItem: async (type, id) => {
         let token = await AsyncStorage.getItem('token');
         let property = await AsyncStorage.getItem('property');
@@ -214,6 +347,11 @@ export default {
         property = JSON.parse(property);
 
         let json = await request('post', `/unit/${property.id}/add${type}`, body, token);
+        return json;
+    },
+    search: async (MedicoNome) => {
+        let token = await AsyncStorage.getItem('token');
+        let json = await request('get', `/search?q=${MedicoNome}`, {}, token);
         return json;
     }
 };

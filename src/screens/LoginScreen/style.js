@@ -8,14 +8,10 @@ export default {
     `,
     Logo: styled.Image`
         width: 300px;
-        height: 200px;
+        height: 230px;
         margin-left: auto;
-        margin-bottom: 20px;
         margin-right: auto;
-    `,
-    Info: styled.Image`
-        width: 40px;
-        height: 50px;
+        margin-bottom: 20px;
     `,
     Field: styled.TextInput`
         border-width: 1px;
@@ -28,7 +24,7 @@ export default {
         margin-bottom: 15px;
     `,
     ButtonArea: styled.TouchableOpacity`
-        background-color: #5e2129;
+        background-color: #87CEFA;
         padding: 12px;
         justify-content: center;
         align-items: center;
@@ -43,26 +39,17 @@ export default {
     Information: styled.TouchableOpacity`
     background-color: #FFFFFF;
     padding:10px;
-    width: 95%;
+
     margin-top:10px;
     border-radius:5px;
     padding-left: 20px;
     padding-right: 40px;    
     flex-direction: row;
+    align-items:center;
     border:1px solid #ccc;
     `,
     InformationText: styled.Text`
-    margin-top:10px;
     margin-left:12px;
     font-family: 'Open Sans';
-    `,
-    Slogan: styled.Text`
-    color: #5c5c5c;
-    font-weight: bold;
-    font-style: italic;
-    font-size: 20px;
-    margin-bottom: 25px;
-    margin-left: 75px;
     `
-
 };

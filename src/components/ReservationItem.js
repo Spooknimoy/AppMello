@@ -13,6 +13,7 @@ const Box = styled.TouchableOpacity`
 const CoverImage = styled.Image`
     background-color: #CCC;
     height: 150px;
+    width: 125px;
     border-radius: 15px;
 `;
 const Title = styled.Text`
@@ -43,9 +44,9 @@ export default ({data}) => {
 
     return (
         <Box onPress={handleClick}>
-            <CoverImage source={{uri: data.cover}} resizeMode="cover" />
-            <Title>{data.title}</Title>
-            <DateText>Horários de funcionamento:</DateText>
+            <CoverImage source={require('../assets/doutor.png')} resizeMode="cover" />
+            <Title>Dr Claudio</Title>
+            <DateText>Horários disponíveis:</DateText>
             {data.dates.map((item, index)=>(
                 <DateItem key={index}>{item}</DateItem>
             ))}
